@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f7f3ef">
+<title>My Daily Planner</title>
+<style>
+:root{--bg:#f7f3ef;--card:#fff;--ink:#3f3a36;--muted:#8b8178;--accent:#b98f7a;--accent2:#ead9cf;--line:#eee5df;--green:#879b83;--danger:#b86d69}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+.app{max-width:700px;margin:auto;padding:18px 15px 40px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+h1{font-size:25px;margin:0}.date{font-size:12px;color:var(--muted);margin-top:4px}
+.iconbtn{border:0;background:white;border-radius:14px;padding:11px 13px;box-shadow:0 3px 12px #0000000b}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;background:#eee6df;padding:5px;border-radius:16px;margin-bottom:15px}
+.tab{border:0;background:transparent;padding:10px 4px;border-radius:12px;color:var(--muted);font-weight:700}.tab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px #0000000a}
+.days{display:flex;gap:7px;overflow:auto;padding:2px 0 10px}.day{min-width:63px;border:0;background:#fff;border-radius:15px;padding:9px 4px;color:var(--muted)}.day strong{display:block;color:var(--ink);font-size:12px}.day.active{background:var(--accent);color:#fff}.day.active strong{color:#fff}
+.card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 5px 20px #00000008}
+.cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.card h2{font-size:16px;margin:0}.small{font-size:12px;color:var(--muted)}
+.item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start}.item:last-child{border-bottom:0}
+.time{width:48px;font-size:12px;color:var(--accent);font-weight:800;padding-top:2px;flex:none}.body{flex:1}.title{font-weight:700;font-size:14px}.note{font-size:12px;color:var(--muted);margin-top:3px}.tag{display:inline-block;font-size:10px;padding:3px 7px;border-radius:8px;background:var(--accent2);margin-top:5px}
+.actions{display:flex;gap:5px}.actions button{border:0;background:#f6f1ed;border-radius:9px;padding:6px 8px;font-size:11px;color:var(--ink)}
+.check{width:20px;height:20px;accent-color:var(--green);flex:none}.done .title{text-decoration:line-through;color:#aaa}
+.btn{border:0;border-radius:13px;padding:11px 14px;font-weight:700;background:var(--accent);color:white}.btn.secondary{background:#f0e8e2;color:var(--ink)}.btn.danger{background:#f5dfdd;color:var(--danger)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.progress{height:9px;background:#eee7e2;border-radius:20px;overflow:hidden}.bar{height:100%;background:var(--green);width:0%;transition:.25s}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;color:var(--ink)}label{font-size:12px;font-weight:700;display:block;margin:9px 0 5px}
+.hidden{display:none}.studygrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.studybox{background:#faf6f2;border-radius:15px;padding:13px}.studybox h3{font-size:14px;margin:0 0 8px}.studybox ul{padding-left:18px;margin:0;font-size:12px;line-height:1.7}
+.modal{position:fixed;inset:0;background:#0006;display:none;align-items:flex-end;z-index:10}.modal.show{display:flex}.sheet{background:#fff;width:100%;max-width:700px;margin:auto auto 0;border-radius:25px 25px 0 0;padding:20px;max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between}.close{border:0;background:#f3eeea;border-radius:50%;width:32px;height:32px}
+.weekrow{display:grid;grid-template-columns:70px 1fr;gap:8px;border-bottom:1px solid var(--line);padding:9px 0}.weekday{font-weight:800;font-size:12px}.weekitems{font-size:12px;color:var(--muted);line-height:1.6}
+@media(min-width:600px){.app{padding-top:30px}.modal{align-items:center}.sheet{border-radius:25px;margin:auto;width:92%}}
+</style>
+</head>
+<body>
+<div id="fallback" style="max-width:700px;margin:0 auto;padding:18px 15px 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#3f3a36;background:#f7f3ef;min-height:100vh">
+<h1 style="margin:0 0 6px;font-size:25px">My Daily Planner 🌷</h1>
+<p style="color:#8b8178;font-size:13px">Roster mingguan • Bisa diedit setelah dibuka di Safari</p>
+<div style="background:#fff;border-radius:20px;padding:16px;box-shadow:0 5px 20px #00000008">
+<h2 style="font-size:17px">Senin — Roster Harian</h2>
+<div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">05:30</b> &nbsp; Bangun, ibadah & minum air<div style="font-size:12px;color:#8b8178">Mulai hari dengan tenang • Me-time</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">06:00</b> &nbsp; Siapkan sarapan & kebutuhan suami<div style="font-size:12px;color:#8b8178"> • Suami & keluarga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">07:00</b> &nbsp; Sarapan keluarga<div style="font-size:12px;color:#8b8178">Makan bersama • Suami & keluarga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">08:00</b> &nbsp; Stimulasi & bermain dengan anak<div style="font-size:12px;color:#8b8178">Buku/warna/bentuk • Anak</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">09:00</b> &nbsp; Tugas rumah fokus 30 menit<div style="font-size:12px;color:#8b8178">Pilih satu area saja • Rumah</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">09:30</b> &nbsp; Snack anak<div style="font-size:12px;color:#8b8178"> • Anak</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">10:00</b> &nbsp; Aktivitas anak<div style="font-size:12px;color:#8b8178">Sensory play / bermain • Anak</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">11:00</b> &nbsp; Masak & persiapan makan siang<div style="font-size:12px;color:#8b8178"> • Rumah</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">12:00</b> &nbsp; Makan siang<div style="font-size:12px;color:#8b8178"> • Suami & keluarga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">12:30</b> &nbsp; Belajar: English<div style="font-size:12px;color:#8b8178">30–60 menit • Belajar</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">13:30</b> &nbsp; Istirahat / tidur siang<div style="font-size:12px;color:#8b8178"> • Me-time</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">14:30</b> &nbsp; Bangun & snack anak<div style="font-size:12px;color:#8b8178"> • Anak</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">15:00</b> &nbsp; Jalan / olahraga ringan<div style="font-size:12px;color:#8b8178">Bisa sambil bermain • Olahraga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">15:40</b> &nbsp; Mandi anak & diri sendiri<div style="font-size:12px;color:#8b8178"> • Anak</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">16:30</b> &nbsp; Persiapan makan malam<div style="font-size:12px;color:#8b8178"> • Rumah</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">18:00</b> &nbsp; Makan malam keluarga<div style="font-size:12px;color:#8b8178"> • Suami & keluarga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">19:00</b> &nbsp; Quality time & bermain<div style="font-size:12px;color:#8b8178">Tanpa distraksi • Suami & keluarga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">20:00</b> &nbsp; Rutinitas tidur anak<div style="font-size:12px;color:#8b8178">Buku + lampu redup • Anak</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">20:30</b> &nbsp; Waktu bersama suami<div style="font-size:12px;color:#8b8178"> • Suami & keluarga</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">21:15</b> &nbsp; Skincare & membaca<div style="font-size:12px;color:#8b8178"> • Me-time</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">21:45</b> &nbsp; Siapkan kebutuhan besok<div style="font-size:12px;color:#8b8178"> • Rumah</div></div><div style="padding:9px 0;border-bottom:1px solid #eee5df"><b style="color:#b98f7a">22:00</b> &nbsp; Tidur<div style="font-size:12px;color:#8b8178"> • Me-time</div></div>
+</div>
+<p style="font-size:12px;color:#8b8178;margin-top:12px">Catatan: kalau dibuka sebagai file HTML biasa, fitur edit membutuhkan Safari/browser yang menjalankan JavaScript.</p>
+</div>
+
+<div class="app">
+  <div class="top">
+    <div><h1>My Daily Planner 🌷</h1><div class="date" id="date"></div></div>
+    <button class="iconbtn" onclick="goToday()">📅</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('today',this)">Hari Ini</button>
+    <button class="tab" onclick="showTab('week',this)">Roster Mingguan</button>
+    <button class="tab" onclick="showTab('study',this)">Belajar</button>
+  </div>
+
+  <section id="today">
+    <div class="days" id="days"></div>
+    <div class="card">
+      <div class="cardhead"><div><h2 id="dayTitle">Roster Hari Ini</h2><div class="small">Checklist kegiatan harian</div></div><button class="btn secondary" onclick="openAdd()">＋ Tambah</button></div>
+      <div id="schedule"></div>
+    </div>
+    <div class="card">
+      <div class="cardhead"><h2>Progress hari ini</h2><span class="small" id="progressText">0%</span></div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+    </div>
+    <div class="row">
+      <button class="btn secondary" onclick="resetChecks()">Reset checklist</button>
+      <button class="btn secondary" onclick="backup()">💾 Backup</button>
+      <button class="btn secondary" onclick="document.getElementById('restore').click()">↩ Restore</button>
+      <input id="restore" type="file" accept=".json" class="hidden" onchange="restore(event)">
+    </div>
+  </section>
+
+  <section id="week" class="hidden"><div class="card"><div class="cardhead"><h2>Roster Senin–Minggu</h2><span class="small">Tekan Edit di hari yang dipilih</span></div><div id="weekList"></div></div></section>
+
+  <section id="study" class="hidden">
+    <div class="card"><div class="cardhead"><h2>📚 Jadwal Belajar Mingguan</h2></div><div class="studygrid" id="studyGrid"></div></div>
+    <div class="card"><h2 style="font-size:16px">Target minggu ini</h2><ul class="small" style="line-height:1.8"><li>Belajar diri sendiri 4–6 jam/minggu</li><li>Belajar anak 1–2 sesi singkat/hari</li><li>Utamakan bermain, membaca, dan aktivitas nyata</li></ul></div>
+  </section>
+</div>
+
+<div class="modal" id="modal">
+<div class="sheet">
+ <div class="modalhead"><div><h2 id="modalTitle" style="margin:0;font-size:19px">Tambah Jadwal</h2><div class="small">Kamu bebas mengubah roster kapan saja.</div></div><button class="close" onclick="closeModal()">×</button></div>
+ <input type="hidden" id="editId">
+ <label>Hari</label><select id="fday"></select>
+ <label>Jam</label><input id="ftime" type="time">
+ <label>Kegiatan</label><input id="ftitle" placeholder="Contoh: Meeting / antar anak / me-time">
+ <label>Keterangan (opsional)</label><textarea id="fnote" rows="2" placeholder="Catatan kecil..."></textarea>
+ <label>Kategori</label><select id="ftag"><option>Rumah</option><option>Anak</option><option>Suami & keluarga</option><option>Belajar</option><option>Olahraga</option><option>Me-time</option><option>Lainnya</option></select>
+ <div class="row" style="margin-top:15px"><button class="btn" onclick="saveSchedule()">Simpan</button><button class="btn danger" id="deleteBtn" onclick="deleteSchedule()" style="display:none">Hapus</button><button class="btn secondary" onclick="closeModal()">Batal</button></div>
+</div></div>
+
+<script>
+const days=["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+const defaultRoster={
+"Senin":[["05:30","Bangun, ibadah & minum air","Mulai hari dengan tenang","Me-time"],["06:00","Siapkan sarapan & kebutuhan suami","","Suami & keluarga"],["07:00","Sarapan keluarga","Makan bersama","Suami & keluarga"],["08:00","Stimulasi & bermain dengan anak","Buku/warna/bentuk","Anak"],["09:00","Tugas rumah fokus 30 menit","Pilih satu area saja","Rumah"],["09:30","Snack anak","","Anak"],["10:00","Aktivitas anak","Sensory play / bermain","Anak"],["11:00","Masak & persiapan makan siang","","Rumah"],["12:00","Makan siang","","Suami & keluarga"],["12:30","Belajar: English","30–60 menit","Belajar"],["13:30","Istirahat / tidur siang","","Me-time"],["14:30","Bangun & snack anak","","Anak"],["15:00","Jalan / olahraga ringan","Bisa sambil bermain","Olahraga"],["15:40","Mandi anak & diri sendiri","","Anak"],["16:30","Persiapan makan malam","","Rumah"],["18:00","Makan malam keluarga","","Suami & keluarga"],["19:00","Quality time & bermain","Tanpa distraksi","Suami & keluarga"],["20:00","Rutinitas tidur anak","Buku + lampu redup","Anak"],["20:30","Waktu bersama suami","","Suami & keluarga"],["21:15","Skincare & membaca","","Me-time"],["21:45","Siapkan kebutuhan besok","","Rumah"],["22:00","Tidur","","Me-time"]],
+"Selasa":[["05:30","Bangun, ibadah & minum air","","Me-time"],["06:00","Sarapan & siapkan kebutuhan suami","","Suami & keluarga"],["07:00","Sarapan keluarga","","Suami & keluarga"],["08:00","Belajar anak: angka 1–5","Lewat permainan","Anak"],["09:00","Tugas rumah fokus","","Rumah"],["09:30","Snack anak","","Anak"],["10:00","Aktivitas anak: balok/puzzle","","Anak"],["11:00","Masak & persiapan makan siang","","Rumah"],["12:00","Makan siang","","Suami & keluarga"],["12:30","Belajar: Canva / AI","30–60 menit","Belajar"],["13:30","Istirahat / tidur siang","","Me-time"],["14:30","Snack & bermain anak","","Anak"],["15:00","Olahraga ringan","","Olahraga"],["15:40","Mandi","","Anak"],["16:30","Persiapan makan malam","","Rumah"],["18:00","Makan malam keluarga","","Suami & keluarga"],["19:00","Family time","","Suami & keluarga"],["20:00","Rutinitas tidur anak","","Anak"],["20:30","Waktu bersama suami","","Suami & keluarga"],["21:15","Me-time / skincare","","Me-time"],["21:45","Persiapan besok","","Rumah"],["22:00","Tidur","","Me-time"]],
+"Rabu":[["05:30","Bangun, ibadah & minum air","","Me-time"],["06:00","Sarapan & kebutuhan suami","","Suami & keluarga"],["07:00","Sarapan keluarga","","Suami & keluarga"],["08:00","Bahasa anak: tambah kosakata","Baca buku & sebut benda","Anak"],["09:00","Tugas rumah fokus","","Rumah"],["09:30","Snack anak","","Anak"],["10:00","Bermain & membaca","","Anak"],["11:00","Masak & makan siang","","Rumah"],["12:00","Makan siang","","Suami & keluarga"],["12:30","Belajar: keuangan keluarga","Catat & review pengeluaran","Belajar"],["13:30","Istirahat","","Me-time"],["14:30","Snack anak","","Anak"],["15:00","Aktif bersama anak / olahraga","","Olahraga"],["15:40","Mandi","","Anak"],["16:30","Persiapan makan malam","","Rumah"],["18:00","Makan malam","","Suami & keluarga"],["19:00","Quality time","","Suami & keluarga"],["20:00","Rutinitas tidur","","Anak"],["20:30","Waktu bersama suami","","Suami & keluarga"],["21:15","Skincare / baca","","Me-time"],["21:45","Persiapan besok","","Rumah"],["22:00","Tidur","","Me-time"]],
+"Thursday":[["05:30","Bangun, ibadah & minum air","","Me-time"]]
+};
+defaultRoster["Kamis"]=defaultRoster["Rabu"].map(x=>[...x]);
+defaultRoster["Kamis"][3]=["08:00","Puzzle & problem solving anak","1 sesi singkat","Anak"];
+defaultRoster["Kamis"][11]=["12:30","Belajar: membaca / course","30–60 menit","Belajar"];
+defaultRoster["Jumat"]=defaultRoster["Rabu"].map(x=>[...x]);
+defaultRoster["Jumat"][3]=["08:00","Kreativitas anak: musik & menggambar","","Anak"];
+defaultRoster["Jumat"][11]=["12:30","Belajar: personal development","Buku/podcast/course","Belajar"];
+defaultRoster["Sabtu"]=defaultRoster["Rabu"].map(x=>[...x]);
+defaultRoster["Sabtu"][3]=["08:00","Outdoor learning anak","Taman / jalan santai","Anak"];
+defaultRoster["Sabtu"][11]=["12:30","Skill / hobby pribadi","Waktu santai produktif","Belajar"];
+defaultRoster["Minggu"]=defaultRoster["Rabu"].map(x=>[...x]);
+defaultRoster["Minggu"][3]=["08:00","Review ringan anak","Buku, lagu, warna, angka","Anak"];
+defaultRoster["Minggu"][11]=["12:30","Review minggu & planning","Atur minggu berikutnya","Belajar"];
+
+const studies={
+"Senin":["English","Warna & bentuk"],"Selasa":["Canva / AI / digital","Angka 1–5"],"Rabu":["Keuangan keluarga","Bahasa & kosakata"],"Kamis":["Baca buku / course","Puzzle & problem solving"],"Jumat":["Personal development","Musik & kreativitas"],"Sabtu":["Skill / hobby","Outdoor learning"],"Minggu":["Review & planning","Review ringan"]
+};
+let data=JSON.parse(localStorage.getItem("plannerData")||"null")||JSON.parse(JSON.stringify(defaultRoster));
+let checks=JSON.parse(localStorage.getItem("plannerChecks")||"{}");
+let selected=days[(new Date().getDay()+6)%7];
+
+function persist(){localStorage.setItem("plannerData",JSON.stringify(data));localStorage.setItem("plannerChecks",JSON.stringify(checks))}
+function key(d,i){return d+"_"+i}
+function init(){document.getElementById("fallback").style.display="none";
+ document.getElementById("date").textContent=new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ document.getElementById("fday").innerHTML=days.map(d=>`<option>${d}</option>`).join("");
+ renderDays();renderSchedule();renderWeek();renderStudy();
+}
+function renderDays(){document.getElementById("days").innerHTML=days.map(d=>`<button class="day ${d===selected?"active":""}" onclick="selectDay('${d}')"><strong>${d.slice(0,3)}</strong>${d===selected?"✓":" "}</button>`).join("")}
+function selectDay(d){selected=d;renderDays();renderSchedule()}
+function renderSchedule(){
+ document.getElementById("dayTitle").textContent=selected+" • Roster";
+ const arr=data[selected]||[];
+ document.getElementById("schedule").innerHTML=arr.map((x,i)=>{
+  let id=key(selected,i),done=!!checks[id];
+  return `<div class="item ${done?"done":""}">
+   <input class="check" type="checkbox" ${done?"checked":""} onchange="toggle('${id}',this.checked)">
+   <div class="time">${x[0]}</div><div class="body"><div class="title">${x[1]}</div>${x[2]?`<div class="note">${x[2]}</div>`:""}<span class="tag">${x[3]||"Lainnya"}</span></div>
+   <div class="actions"><button onclick="openEdit('${selected}',${i})">Edit</button></div>
+  </div>`
+ }).join("")||'<div class="small">Belum ada jadwal. Tambahkan dengan tombol ＋ Tambah.</div>';
+ updateProgress();
+}
+function toggle(id,v){checks[id]=v;persist();renderSchedule()}
+function updateProgress(){let arr=data[selected]||[],n=arr.length,d=arr.filter((_,i)=>checks[key(selected,i)]).length,p=n?Math.round(d/n*100):0;document.getElementById("bar").style.width=p+"%";document.getElementById("progressText").textContent=p+"%"}
+function openAdd(){document.getElementById("modalTitle").textContent="Tambah Jadwal";document.getElementById("editId").value="";document.getElementById("fday").value=selected;document.getElementById("ftime").value="";document.getElementById("ftitle").value="";document.getElementById("fnote").value="";document.getElementById("ftag").value="Lainnya";document.getElementById("deleteBtn").style.display="none";document.getElementById("modal").classList.add("show")}
+function openEdit(d,i){let x=data[d][i];document.getElementById("modalTitle").textContent="Edit Jadwal";document.getElementById("editId").value=d+"|"+i;document.getElementById("fday").value=d;document.getElementById("ftime").value=x[0];document.getElementById("ftitle").value=x[1];document.getElementById("fnote").value=x[2]||"";document.getElementById("ftag").value=x[3]||"Lainnya";document.getElementById("deleteBtn").style.display="inline-block";document.getElementById("modal").classList.add("show")}
+function saveSchedule(){
+ let id=document.getElementById("editId").value,d=document.getElementById("fday").value,x=[document.getElementById("ftime").value,document.getElementById("ftitle").value.trim(),document.getElementById("fnote").value.trim(),document.getElementById("ftag").value];
+ if(!x[0]||!x[1]){alert("Isi jam dan kegiatan dulu ya 😊");return}
+ if(id){let [od,oi]=id.split("|");data[od].splice(+oi,1);data[d].push(x)}else data[d].push(x);
+ data[d].sort((a,b)=>a[0].localeCompare(b[0]));persist();selected=d;closeModal();renderDays();renderSchedule();renderWeek()
+}
+function deleteSchedule(){let id=document.getElementById("editId").value;if(!id)return;let [d,i]=id.split("|");if(confirm("Hapus jadwal ini?")){data[d].splice(+i,1);persist();closeModal();renderSchedule();renderWeek()}}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function resetChecks(){if(confirm("Reset checklist untuk hari ini?")){(data[selected]||[]).forEach((_,i)=>delete checks[key(selected,i)]);persist();renderSchedule()}}
+function renderWeek(){document.getElementById("weekList").innerHTML=days.map(d=>`<div class="weekrow"><div class="weekday">${d}</div><div class="weekitems">${(data[d]||[]).slice(0,6).map(x=>x[0]+" "+x[1]).join(" · ")}${(data[d]||[]).length>6?" · …":""}<br><button class="btn secondary" style="padding:6px 9px;margin-top:5px" onclick="selectDay('${d}');showTab('today',document.querySelector('.tab'))">Buka roster</button></div></div>`).join("")}
+function renderStudy(){document.getElementById("studyGrid").innerHTML=days.map(d=>`<div class="studybox"><h3>${d}</h3><ul><li>👩 ${studies[d][0]}</li><li>👶 ${studies[d][1]}</li></ul></div>`).join("")}
+function showTab(id,btn){["today","week","study"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active")}
+function goToday(){selected=days[(new Date().getDay()+6)%7];renderDays();renderSchedule();showTab("today",document.querySelector(".tab"))}
+function backup(){let blob=new Blob([JSON.stringify({data,checks},null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup-my-planner.json";a.click()}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let o=JSON.parse(r.result);if(o.data){data=o.data;checks=o.checks||{};persist();renderDays();renderSchedule();renderWeek();alert("Backup berhasil dipulihkan 😊")}else alert("File backup tidak valid")}catch{alert("File backup tidak valid")}};r.readAsText(f)}
+init();
+</script>
+</body>
+</html>
